@@ -37,7 +37,7 @@ s = '(())())'
 4. 根据第3条规则来计算的话, 我们发现dp[5]=0, dp[6]=2, 但是显然, dp[6]应该为6才对, 但是我们发现可以将"(())"和"()"进行拼接, 即: dp[i] += dp[i-dp[i]], 即: dp[6] = 2 + dp[6-2] = 2 + dp[4] = 6
 
 根据以上规则, 我们求解dp数组的结果为: [0, 0, 0, 2, 4, 0, 6, 0], 其中最长有效括号对的长度为6. 以下为图解:
-![32.longest-valid-parentheses](./longest-valid-parentheses.png)
+![32. Longest Valid Parentheses](./longest_valid_parentheses.png)
 
 ## 关键点解析
 
