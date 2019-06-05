@@ -15,6 +15,7 @@ class Solution:
         me = n - m
         lsum = []
         msum = []
+        # O(n)
         for i in range(n):
             if ls <= i <= le:
                 if not lsum:
@@ -27,6 +28,7 @@ class Solution:
                 else:
                     msum.append(msum[-1] - a[i - 1] + a[i + m - 1])
 
+        # O(l * m)
         for i in range(len(lsum)):
             for j in range(i, len(msum)):
                 tmp_sum = lsum[i] + msum[j]
@@ -43,6 +45,7 @@ class Solution:
         me = n - l - m
         lsum = []
         msum = []
+        # O(n)
         for i in range(n):
             if ls <= i <= le:
                 if not lsum:
@@ -55,6 +58,7 @@ class Solution:
                 else:
                     msum.append(msum[-1] - a[i - 1] + a[i + m - 1])
 
+        # O(l * m)
         for i in range(len(lsum)):
             for j in range(i + 1):
                 tmp_sum = lsum[i] + msum[j]
