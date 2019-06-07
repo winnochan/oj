@@ -19,47 +19,29 @@ class Solution:
         so, msum[i] = max(msum[i - 1], asum[i] - asum[i-l] + maxl[i-l], asum[i] - asum[i-m] + maxm[i-m])
         """
 
-        alen = len(a)
+        alen, tlen = len(a), l + m
         asum = [0] * (alen + 1)
         maxl = [0] * (alen + 1)
         maxm = [0] * (alen + 1)
         msum = [0] * (alen + 1)
 
         for i in range(alen + 1):
-            if not asum:
-                asum.append(0)
-            else:
-                asum.append(asum[i - 1] + a[i - 1])
+            if i == 1:
+                asum[i] = a[i - 1]
+            elif i > 1:
+                asum[i] = asum[i - 1] + a[i - 1]
 
-            if i < l:
-                maxl.append(0)
-            elif asum[i] - asum[i - l] > maxl[-1]:
-                maxl.append(asum[i] - asum[i - l])
-            else:
-                maxl.append(maxl[-1])
+            if i >= l:
+                maxl[i] = max(maxl[i - 1], asum[i] - asum[i - l])
 
-            if i < m:
-                maxm.append(0)
-            elif asum[i] - asum[i - m] > maxm[-1]:
-                maxm.append(asum[i] - asum[i - m])
-            else:
-                maxm.append(maxm[-1])
+            if i >= m:
+                maxm[i] = max(maxm[i - 1], asum[i] - asum[i - m])
 
-            if i < l + m:
-                msum.append(0)
-            else:
-                msum.append(
-                    max(
-                        msum[i - 1],
-                        asum[i] - asum[i - l] + maxm[i - l],
-                        asum[i] - asum[i - m] + maxl[i - m],
-                    )
-                )
+            if i >= tlen:
+                suml = asum[i] - asum[i - l] + maxm[i - l]
+                summ = asum[i] - asum[i - m] + maxl[i - m]
+                msum[i] = max(msum[i - 1], suml, summ)
 
-        # print(asum)
-        # print(maxl)
-        # print(maxm)
-        # print(msum)
         return msum[-1]
 
 
