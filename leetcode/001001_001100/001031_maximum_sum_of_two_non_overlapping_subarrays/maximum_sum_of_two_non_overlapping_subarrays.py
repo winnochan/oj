@@ -25,22 +25,23 @@ class Solution:
         maxm = [0] * (alen + 1)
         msum = [0] * (alen + 1)
 
-        for i in range(alen + 1):
+        for i in range(tlen):
             if i == 1:
                 asum[i] = a[i - 1]
             elif i > 1:
                 asum[i] = asum[i - 1] + a[i - 1]
-
             if i >= l:
                 maxl[i] = max(maxl[i - 1], asum[i] - asum[i - l])
-
             if i >= m:
                 maxm[i] = max(maxm[i - 1], asum[i] - asum[i - m])
 
-            if i >= tlen:
-                suml = asum[i] - asum[i - l] + maxm[i - l]
-                summ = asum[i] - asum[i - m] + maxl[i - m]
-                msum[i] = max(msum[i - 1], suml, summ)
+        for i in range(tlen, alen + 1):
+            asum[i] = asum[i - 1] + a[i - 1]
+            suml = asum[i] - asum[i - l]
+            summ = asum[i] - asum[i - m]
+            maxl[i] = max(maxl[i - 1], suml)
+            maxm[i] = max(maxm[i - 1], summ)
+            msum[i] = max(msum[i - 1], suml + maxm[i - l], summ + maxl[i - m])
 
         return msum[-1]
 
