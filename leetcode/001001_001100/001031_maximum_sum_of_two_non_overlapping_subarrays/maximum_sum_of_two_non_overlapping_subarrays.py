@@ -5,67 +5,62 @@ from typing import List
 
 class Solution:
     def maxSumTwoNoOverlap(self, a: List[int], l: int, m: int) -> int:
-        n = len(a)
-        max_sum = 0
+        """
 
-        # case 1: L on the left side and M on the right side.
-        ls = 0
-        le = n - l - m
-        ms = l
-        me = n - m
-        lsum = []
-        msum = []
-        # O(n)
-        for i in range(n):
-            if ls <= i <= le:
-                if not lsum:
-                    lsum.append(sum(a[i:i + l]))
-                else:
-                    lsum.append(lsum[-1] - a[i - 1] + a[i + l - 1])
-            if ms <= i <= me:
-                if not msum:
-                    msum.append(sum(a[i:i + m]))
-                else:
-                    msum.append(msum[-1] - a[i - 1] + a[i + m - 1])
+        define asum[i] as the sum of subarray, a[0:i]
+        define maxl[i] as the maximum sum of l-length subarray in a[0:i]
+        define maxm[i] as the maximum sum of m-length subarray in a[0:i]
+        define msum[i] as the maximum sum of non-overlap l-length subarray and m-length subarray
 
-        # O(l * m)
-        for i in range(len(lsum)):
-            for j in range(i, len(msum)):
-                tmp_sum = lsum[i] + msum[j]
-                if tmp_sum > max_sum:
-                    max_sum = tmp_sum
+        case 1: a[i] is both not in l-length subarray and m-length subarray, then msum[i] = msum[i - 1]
+        case 2: a[i] is in l-length subarray, then msum[i] = asum[i] - asum[i-l] + maxm[i-l]
+        case 3: a[i] is in m-length subarray, then msum[i] = asum[i] - asum[i-m] + maxl[i-m]
 
-        if l == m:
-            return max_sum
+        so, msum[i] = max(msum[i - 1], asum[i] - asum[i-l] + maxl[i-l], asum[i] - asum[i-m] + maxm[i-m])
+        """
 
-        # case 2: L on the right side and M on the left side.
-        ls = m
-        le = n - l
-        ms = 0
-        me = n - l - m
-        lsum = []
-        msum = []
-        # O(n)
-        for i in range(n):
-            if ls <= i <= le:
-                if not lsum:
-                    lsum.append(sum(a[i:i + l]))
-                else:
-                    lsum.append(lsum[-1] - a[i - 1] + a[i + l - 1])
-            if ms <= i <= me:
-                if not msum:
-                    msum.append(sum(a[i:i + m]))
-                else:
-                    msum.append(msum[-1] - a[i - 1] + a[i + m - 1])
+        alen = len(a)
+        asum = [0] * (alen + 1)
+        maxl = [0] * (alen + 1)
+        maxm = [0] * (alen + 1)
+        msum = [0] * (alen + 1)
 
-        # O(l * m)
-        for i in range(len(lsum)):
-            for j in range(i + 1):
-                tmp_sum = lsum[i] + msum[j]
-                if tmp_sum > max_sum:
-                    max_sum = tmp_sum
+        for i in range(alen + 1):
+            if not asum:
+                asum.append(0)
+            else:
+                asum.append(asum[i - 1] + a[i - 1])
 
-        return max_sum
+            if i < l:
+                maxl.append(0)
+            elif asum[i] - asum[i - l] > maxl[-1]:
+                maxl.append(asum[i] - asum[i - l])
+            else:
+                maxl.append(maxl[-1])
+
+            if i < m:
+                maxm.append(0)
+            elif asum[i] - asum[i - m] > maxm[-1]:
+                maxm.append(asum[i] - asum[i - m])
+            else:
+                maxm.append(maxm[-1])
+
+            if i < l + m:
+                msum.append(0)
+            else:
+                msum.append(
+                    max(
+                        msum[i - 1],
+                        asum[i] - asum[i - l] + maxm[i - l],
+                        asum[i] - asum[i - m] + maxl[i - m],
+                    )
+                )
+
+        # print(asum)
+        # print(maxl)
+        # print(maxm)
+        # print(msum)
+        return msum[-1]
 
 
 s = Solution()
